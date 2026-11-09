@@ -1,0 +1,4 @@
+recurso m = 4 / 0;
+recurso n = x + 1;
+proceso p { etapa e usa m durante 5 minutos; etapa f usa n durante 1 hora; }
+generar pacientes cada 1 hora hacia p;

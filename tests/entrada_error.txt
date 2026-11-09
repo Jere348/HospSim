@@ -1,0 +1,9 @@
+recurso medicos = 1;
+
+proceso atencion {
+    etapa consulta usa enfermeros durante 15 minutos;
+}
+
+generar pacientes cada 5 minutos hacia proceso_fantasma;
+
+mostrar ocupacion(pacientes_atendidos);

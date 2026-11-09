@@ -1,0 +1,5 @@
+recurso m = 1;
+proceso p { etapa e usa m durante 5 minutos; }
+generar pacientes cada 1 hora hacia m;
+mostrar ocupacion(p);
+mostrar fantasma;

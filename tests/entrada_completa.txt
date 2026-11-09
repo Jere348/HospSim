@@ -1,0 +1,13 @@
+// ejemplo completo
+recurso medicos = 2 * 1;
+recurso camas = 5;
+proceso atencion {
+  etapa triaje usa medicos durante 10 minutos;
+  etapa cama usa camas durante 1 hora;
+}
+generar pacientes cada 5 minutos hacia atencion;
+simular durante 8 horas;
+mostrar pacientes_atendidos;
+mostrar ocupacion(medicos);
+mostrar ocupacion(camas);
+mostrar espera_promedio;

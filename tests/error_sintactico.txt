@@ -1,0 +1,2 @@
+recurso m = 1
+proceso { }
