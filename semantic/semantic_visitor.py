@@ -26,6 +26,8 @@ class SemanticVisitor(HospSimVisitor):
     def _eval(self, e):
         if isinstance(e, HospSimParser.NumExprContext):
             return float(e.NUMBER().getText())
+        if isinstance(e, (HospSimParser.TermExprContext, HospSimParser.FactorExprContext)):
+            return self._eval(e.getChild(0))
         if isinstance(e, HospSimParser.ParenExprContext):
             return self._eval(e.expr())
         if isinstance(e, HospSimParser.IdExprContext):
@@ -39,7 +41,7 @@ class SemanticVisitor(HospSimVisitor):
                 return None
             sym.used = True
             return sym.value
-        a, b = self._eval(e.expr(0)), self._eval(e.expr(1))
+        a, b = self._eval(e.getChild(0)), self._eval(e.getChild(2))  # AddExpr / MultExpr
         op = e.getChild(1).getText()
         if op == '/' and b == 0:
             self._error("División entre cero", e)
@@ -57,7 +59,7 @@ class SemanticVisitor(HospSimVisitor):
     def visitProgram(self, ctx):
         self.visitChildren(ctx)
         if self.simulaciones == 0:
-            self.errors.append(SemanticError("Falta la sentencia 'simular durante ...'", ctx.stop.line))
+            self.errors.append(SemanticError("Falta la sentencia 'simular durante ...'", (ctx.stop or ctx.start).line))  # programa vacío: stop es None
 
     # Declaración de Recurso: recurso medicos = 1;
     def visitResourceDecl(self, ctx):
@@ -66,7 +68,7 @@ class SemanticVisitor(HospSimVisitor):
         if val is not None:
             if val <= 0:
                 self._error(f"La capacidad del recurso '{name}' debe ser mayor a 0", ctx)
-            elif val != int(val):
+            elif abs(val - round(val)) > 1e-9:
                 self._error(f"La capacidad del recurso '{name}' debe ser un número entero (se obtuvo {val:g})", ctx)
         sym = self._declare(name, 'recurso', ctx)
         if sym:
@@ -89,16 +91,16 @@ class SemanticVisitor(HospSimVisitor):
         stage_name = ctx.ID(0).getText()
         resource_name = ctx.ID(1).getText()
 
+        res_sym = self.symtab.lookup(resource_name)  # antes de declarar: 'etapa medicos usa medicos' es válido
         sym = self._declare(stage_name, 'etapa', ctx)
         if sym:
             sym.used = True  # una etapa vive dentro de su proceso
         self._check_positive(ctx.expr(), f"La duración de la etapa '{stage_name}'", ctx)
 
-        res_sym = self.symtab.lookup(resource_name)
         if res_sym is None:
             self._error(f"Recurso '{resource_name}' utilizado en etapa '{stage_name}' no está declarado", ctx)
         elif res_sym.type_ != 'recurso':
-            self._error(f"'{resource_name}' debe ser un 'recurso' válido", ctx)
+            self._error(f"'{resource_name}' es de tipo '{res_sym.type_}'; una etapa solo puede usar un recurso", ctx)
         else:
             res_sym.used = True
 

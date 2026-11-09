@@ -49,13 +49,13 @@ class HospSimVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by HospSimParser#IdExpr.
-    def visitIdExpr(self, ctx:HospSimParser.IdExprContext):
+    # Visit a parse tree produced by HospSimParser#TermExpr.
+    def visitTermExpr(self, ctx:HospSimParser.TermExprContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by HospSimParser#NumExpr.
-    def visitNumExpr(self, ctx:HospSimParser.NumExprContext):
+    # Visit a parse tree produced by HospSimParser#AddExpr.
+    def visitAddExpr(self, ctx:HospSimParser.AddExprContext):
         return self.visitChildren(ctx)
 
 
@@ -64,8 +64,18 @@ class HospSimVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by HospSimParser#AddExpr.
-    def visitAddExpr(self, ctx:HospSimParser.AddExprContext):
+    # Visit a parse tree produced by HospSimParser#FactorExpr.
+    def visitFactorExpr(self, ctx:HospSimParser.FactorExprContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by HospSimParser#NumExpr.
+    def visitNumExpr(self, ctx:HospSimParser.NumExprContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by HospSimParser#IdExpr.
+    def visitIdExpr(self, ctx:HospSimParser.IdExprContext):
         return self.visitChildren(ctx)
 
 

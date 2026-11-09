@@ -39,11 +39,20 @@ showStmt
     | MOSTRAR ID LPAREN ID RPAREN SEMI
     ;
 
-// En ANTLR la alternativa que aparece primero tiene mayor precedencia: * y / antes que + y -
+// Gramática estratificada: expr (E) → term (T) → factor (F).
+// La precedencia (* / sobre + -) y la asociatividad izquierda quedan fijadas por la gramática.
 expr
-    : expr (MULT | DIV) expr       # MultExpr
-    | expr (PLUS | MINUS) expr     # AddExpr
-    | NUMBER                       # NumExpr
+    : expr (PLUS | MINUS) term     # AddExpr
+    | term                         # TermExpr
+    ;
+
+term
+    : term (MULT | DIV) factor     # MultExpr
+    | factor                       # FactorExpr
+    ;
+
+factor
+    : NUMBER                       # NumExpr
     | ID                           # IdExpr
     | LPAREN expr RPAREN           # ParenExpr
     ;

@@ -44,27 +44,34 @@ pacientes_atendidos / espera_promedio / ocupacion(recurso)
 | `semantic/errors.py` | `SemanticError` con número de línea. |
 | `backend/modelo.py` | Convierte el árbol validado en el `Modelo` (representación intermedia independiente de ANTLR). |
 | `backend/simulador.py` | Ejecuta el `Modelo` y formatea las consultas `mostrar`. |
+| `tools/derivaciones.py` | Genera derivaciones más a la izquierda (notación del curso) desde el parser real y verifica que usen solo producciones de la gramática. |
 
 ## Decisiones de diseño
 - **Dos recorridos separados** (semántico y construcción del modelo): el back end nunca ve un árbol inválido, así no repite validaciones.
 - **Representación intermedia propia**: desacopla el back end de ANTLR. En el Hito 3 se puede generar LLVM IR desde el mismo `Modelo` sin tocar el front end; el simulador en Python queda como oráculo para validar el código generado.
 - **Simulación determinista** (sin aleatoriedad): las salidas son reproducibles y se pueden verificar a mano, requisito del plan de validación.
 
-## Errores semánticos verificados (15)
-1. Identificador declarado dos veces en el mismo ámbito.
-2. Recurso usado en una etapa no declarado.
-3. Lo usado en una etapa no es un recurso.
-4. Proceso destino de `generar` no declarado.
-5. El destino de `generar` no es un proceso.
-6. Identificador no declarado dentro de una expresión.
-7. Identificador de tipo distinto a recurso dentro de una expresión.
-8. División entre cero.
-9. Capacidad de recurso ≤ 0.
-10. Capacidad de recurso no entera.
-11. Duración de etapa, intervalo de llegada o duración de simulación ≤ 0.
-12. Proceso sin etapas.
-13. Falta la sentencia `simular` / hay más de una.
-14. `mostrar` sobre algo que no es una métrica.
-15. Aridad incorrecta de la métrica (`ocupacion` sin recurso, otra métrica con argumento) u `ocupacion` sobre algo que no es recurso.
+## Errores semánticos verificados (21)
+1. Identificador duplicado en el mismo ámbito — `recurso m = 2;`
+2. Recurso no declarado en una etapa — `etapa e usa enfermeros durante 5 minutos;`
+3. Lo usado en una etapa no es un recurso — `etapa x usa p durante 5 minutos;`
+4. Proceso destino no declarado — `... hacia fantasma;`
+5. El destino de una llegada no es un proceso — `... hacia m;`
+6. Identificador no declarado en una expresión — `recurso n = x + 1;`
+7. Identificador que no es recurso en una expresión — `recurso n = p * 2;`
+8. División entre cero — `recurso n = 4 / (2 - 2);`
+9. Capacidad menor o igual a 0 — `recurso n = 2 - 5;`
+10. Capacidad no entera — `recurso n = 3 / 2;`
+11. Duración de etapa menor o igual a 0 — `etapa e usa m durante 0 minutos;`
+12. Intervalo de llegada menor o igual a 0 — `generar pacientes cada 0 minutos hacia p;`
+13. Duración de simulación menor o igual a 0 — `simular durante 0 horas;`
+14. Proceso sin etapas — `proceso q { }`
+15. Falta la sentencia simular — `(programa sin simular)`
+16. Más de una sentencia simular — `simular ... (segunda vez)`
+17. mostrar sobre algo que no es métrica — `mostrar m;`
+18. ocupacion sin recurso — `mostrar ocupacion;`
+19. Métrica que no recibe argumentos — `mostrar espera_promedio(m);`
+20. ocupacion sobre algo que no es recurso — `mostrar ocupacion(p);`
+21. ocupacion sobre un recurso inexistente — `mostrar ocupacion(rayos_x);`
 
-Advertencia: símbolo declarado y nunca usado.
+Advertencia: recurso o proceso declarado y nunca usado.

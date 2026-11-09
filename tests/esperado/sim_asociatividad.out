@@ -1,0 +1,7 @@
+Análisis semántico: OK
+=== RESULTADOS ===
+  pacientes_atendidos = 2
+  espera_promedio = 0.00 minutos
+  ocupacion(medicos) = 8.33 %
+  ocupacion(camas) = 11.11 %
+  ocupacion(sillas) = 0.00 %

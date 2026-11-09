@@ -18,9 +18,9 @@ Pruebas de caja negra con salida esperada (*golden files*):
 |---|---|---|
 | Léxica | `error_lexico` | Carácter inválido (`@`) reportado con línea y columna. |
 | Sintáctica | `error_sintactico` | `;` faltante e identificador faltante. |
-| Semántica | `error_duplicado`, `error_capacidad`, `error_capacidad_entera`, `error_expr`, `error_tiempos`, `error_tipos`, `error_tipo_expresion`, `error_estructura`, `error_simular_doble`, `error_metricas`, `entrada_error` | Los 15 errores semánticos y la advertencia de símbolos sin usar. |
-| Gramática | `sim_precedencia` | `2 + 3 * 4 = 14` y `(2 + 3) * 2 = 10`. |
-| Back end | `entrada_correcta`, `sim_dos_servidores`, `sim_dos_etapas`, `sim_precedencia`, `entrada_completa` | Métricas calculadas a mano (abajo). |
+| Semántica | `error_duplicado`, `error_capacidad`, `error_capacidad_entera`, `error_expr`, `error_tiempos`, `error_tipos`, `error_tipo_expresion`, `error_estructura`, `error_simular_doble`, `error_metricas`, `error_vacio`, `entrada_error` | Errores semánticos y la advertencia de símbolos sin usar (los 21 mensajes están en el informe, sección 6.2). |
+| Gramática | `sim_precedencia`, `sim_asociatividad` | `2 + 3 * 4 = 14`, `(2 + 3) * 2 = 10`, `20 - 5 - 3 = 12`, `24 / 4 / 2 = 3`. |
+| Back end | `entrada_correcta`, `sim_dos_servidores`, `sim_dos_etapas`, `sim_precedencia`, `sim_asociatividad`, `entrada_completa` | Métricas calculadas a mano (abajo). |
 
 ## Resultados esperados calculados a mano
 
@@ -45,6 +45,10 @@ Fines 60, 90, 120, 150 → atendidos **3**; ocupación (60+60+60+30)/(14×120) =
 Triaje sin espera; en camas el paciente *i* = 5q + r empieza en 5r + 10 + 60q y espera 35q.
 Terminan a tiempo q = 0…6 → **35** atendidos; espera 35·(0+…+6)·5/35 = **105.00**;
 médicos 955/960 = **99.48 %**; camas Σ(470 − 5r)/2400 = **95.83 %**.
+
+**`sim_asociatividad`** — `20 - 5 - 3` = 12 médicos, `24 / 4 / 2` = 3 camas, `0.1 * 30` = 3 sillas (no es error de
+capacidad no entera). Llegada cada hora, 180 min; etapas de 60 min (médicos) y 30 min (camas).
+Fines 90, 150, 210 → atendidos **2**, espera **0.00**; médicos 180/2160 = **8.33 %**; camas 60/540 = **11.11 %**.
 
 ## Criterio de aceptación
 Todos los casos en `OK` (`0 prueba(s) fallida(s)`). Todo error nuevo o cambio de gramática se

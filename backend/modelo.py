@@ -44,9 +44,11 @@ class ConstructorModelo(HospSimVisitor):
             return float(e.NUMBER().getText())
         if isinstance(e, HospSimParser.IdExprContext):
             return self.modelo.recursos[e.ID().getText()]
+        if isinstance(e, (HospSimParser.TermExprContext, HospSimParser.FactorExprContext)):
+            return self._valor(e.getChild(0))
         if isinstance(e, HospSimParser.ParenExprContext):
             return self._valor(e.expr())
-        a, b = self._valor(e.expr(0)), self._valor(e.expr(1))
+        a, b = self._valor(e.getChild(0)), self._valor(e.getChild(2))  # AddExpr / MultExpr
         op = e.getChild(1).getText()
         return a + b if op == '+' else a - b if op == '-' else a * b if op == '*' else a / b
 
@@ -54,7 +56,7 @@ class ConstructorModelo(HospSimVisitor):
         return self._valor(expr) * MINUTOS_POR_UNIDAD[unidad.getText()]
 
     def visitResourceDecl(self, ctx):
-        self.modelo.recursos[ctx.ID().getText()] = int(self._valor(ctx.expr()))
+        self.modelo.recursos[ctx.ID().getText()] = round(self._valor(ctx.expr()))
 
     def visitProcessDecl(self, ctx):
         self.modelo.procesos[ctx.ID().getText()] = [

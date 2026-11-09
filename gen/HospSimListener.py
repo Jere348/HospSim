@@ -80,21 +80,21 @@ class HospSimListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by HospSimParser#IdExpr.
-    def enterIdExpr(self, ctx:HospSimParser.IdExprContext):
+    # Enter a parse tree produced by HospSimParser#TermExpr.
+    def enterTermExpr(self, ctx:HospSimParser.TermExprContext):
         pass
 
-    # Exit a parse tree produced by HospSimParser#IdExpr.
-    def exitIdExpr(self, ctx:HospSimParser.IdExprContext):
+    # Exit a parse tree produced by HospSimParser#TermExpr.
+    def exitTermExpr(self, ctx:HospSimParser.TermExprContext):
         pass
 
 
-    # Enter a parse tree produced by HospSimParser#NumExpr.
-    def enterNumExpr(self, ctx:HospSimParser.NumExprContext):
+    # Enter a parse tree produced by HospSimParser#AddExpr.
+    def enterAddExpr(self, ctx:HospSimParser.AddExprContext):
         pass
 
-    # Exit a parse tree produced by HospSimParser#NumExpr.
-    def exitNumExpr(self, ctx:HospSimParser.NumExprContext):
+    # Exit a parse tree produced by HospSimParser#AddExpr.
+    def exitAddExpr(self, ctx:HospSimParser.AddExprContext):
         pass
 
 
@@ -107,12 +107,30 @@ class HospSimListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by HospSimParser#AddExpr.
-    def enterAddExpr(self, ctx:HospSimParser.AddExprContext):
+    # Enter a parse tree produced by HospSimParser#FactorExpr.
+    def enterFactorExpr(self, ctx:HospSimParser.FactorExprContext):
         pass
 
-    # Exit a parse tree produced by HospSimParser#AddExpr.
-    def exitAddExpr(self, ctx:HospSimParser.AddExprContext):
+    # Exit a parse tree produced by HospSimParser#FactorExpr.
+    def exitFactorExpr(self, ctx:HospSimParser.FactorExprContext):
+        pass
+
+
+    # Enter a parse tree produced by HospSimParser#NumExpr.
+    def enterNumExpr(self, ctx:HospSimParser.NumExprContext):
+        pass
+
+    # Exit a parse tree produced by HospSimParser#NumExpr.
+    def exitNumExpr(self, ctx:HospSimParser.NumExprContext):
+        pass
+
+
+    # Enter a parse tree produced by HospSimParser#IdExpr.
+    def enterIdExpr(self, ctx:HospSimParser.IdExprContext):
+        pass
+
+    # Exit a parse tree produced by HospSimParser#IdExpr.
+    def exitIdExpr(self, ctx:HospSimParser.IdExprContext):
         pass
 
 

@@ -1,0 +1,15 @@
+// asociatividad izquierda: 20 - 5 - 3 = 12 (no 18) y 24 / 4 / 2 = 3 (no 12)
+recurso medicos = 20 - 5 - 3;
+recurso camas = 24 / 4 / 2;
+recurso sillas = 0.1 * 30;
+proceso atencion {
+    etapa medicos usa medicos durante 60 minutos;
+    etapa cama usa camas durante 0.5 horas;
+}
+generar pacientes cada 1 hora hacia atencion;
+simular durante 3 horas;
+mostrar pacientes_atendidos;
+mostrar espera_promedio;
+mostrar ocupacion(medicos);
+mostrar ocupacion(camas);
+mostrar ocupacion(sillas);

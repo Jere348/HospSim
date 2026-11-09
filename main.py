@@ -17,16 +17,34 @@ class ColectorErrores(ErrorListener):
         self.errores.append(f"[Error {self.tipo}, línea {line}:{column}] {msg}")
 
 
+def mostrar_tokens(lexer) -> None:
+    """Modo --tokens: imprime la secuencia de tokens que produce el analizador léxico."""
+    for tok in lexer.getAllTokens():
+        print(f"{tok.line}:{tok.column:<4} {HospSimLexer.symbolicNames[tok.type]:<10} '{tok.text}'")
+
+
 def main() -> int:
-    if len(sys.argv) < 2:
-        print("Uso: python3 main.py <archivo_de_entrada>")
+    solo_tokens = '--tokens' in sys.argv[1:]
+    args = [a for a in sys.argv[1:] if a != '--tokens']
+    if not args:
+        print("Uso: python3 main.py [--tokens] <archivo_de_entrada>")
         return 2
 
     # 1. Análisis léxico y sintáctico
-    lexer = HospSimLexer(FileStream(sys.argv[1], encoding='utf-8'))
+    try:
+        entrada = FileStream(args[0], encoding='utf-8')
+    except OSError as e:
+        print(f"No se pudo leer '{args[0]}': {e.strerror}")
+        return 2
+    lexer = HospSimLexer(entrada)
     err_lex = ColectorErrores('Léxico')
     lexer.removeErrorListeners()
     lexer.addErrorListener(err_lex)
+    if solo_tokens:
+        mostrar_tokens(lexer)
+        for e in err_lex.errores:
+            print(' ', e)
+        return 1 if err_lex.errores else 0
 
     parser = HospSimParser(CommonTokenStream(lexer))
     err_sin = ColectorErrores('Sintáctico')

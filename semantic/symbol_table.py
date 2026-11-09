@@ -16,7 +16,7 @@ class Symbol:
 class SymbolTable:
     def __init__(self):
         self._table: dict[str, dict[str, Symbol]] = {}
-        self._scope_stack: list[str] = ['global']
+        self._scope_stack: list[str] = []
         
         self.enter_scope('global')
         for metric in ['pacientes_atendidos', 'espera_promedio', 'ocupacion']:
