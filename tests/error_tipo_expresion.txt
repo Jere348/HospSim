@@ -1,0 +1,5 @@
+recurso m = 1;
+proceso p { etapa e usa m durante 5 minutos; }
+recurso n = p + 1;
+generar pacientes cada pacientes_atendidos minutos hacia p;
+simular durante 1 hora;

@@ -1,0 +1,4 @@
+=== ERRORES SEMÁNTICOS ===
+  [Error Semántico, línea 5] La métrica 'ocupacion' requiere un recurso: ocupacion(recurso)
+  [Error Semántico, línea 6] La métrica 'espera_promedio' no recibe argumentos
+  [Error Semántico, línea 7] 'm' no es una métrica (use pacientes_atendidos, espera_promedio u ocupacion)

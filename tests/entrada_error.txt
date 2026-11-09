@@ -7,3 +7,4 @@ proceso atencion {
 generar pacientes cada 5 minutos hacia proceso_fantasma;
 
 mostrar ocupacion(pacientes_atendidos);
+simular durante 1 hora;

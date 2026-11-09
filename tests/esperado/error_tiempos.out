@@ -1,0 +1,4 @@
+=== ERRORES SEMÁNTICOS ===
+  [Error Semántico, línea 2] La duración de la etapa 'e' debe ser mayor a 0
+  [Error Semántico, línea 3] El intervalo de llegada de pacientes debe ser mayor a 0
+  [Error Semántico, línea 4] La duración de la simulación debe ser mayor a 0

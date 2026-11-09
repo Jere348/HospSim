@@ -1,0 +1,5 @@
+=== ERRORES SEMÁNTICOS ===
+  [Error Semántico, línea 3] 'p' es de tipo 'proceso'; en una expresión solo se pueden usar recursos
+  [Error Semántico, línea 4] 'pacientes_atendidos' es de tipo 'métrica'; en una expresión solo se pueden usar recursos
+=== ADVERTENCIAS ===
+  ADVERTENCIA: 'n' (recurso) declarada en línea 3 no se utiliza.

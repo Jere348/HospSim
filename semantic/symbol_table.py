@@ -3,7 +3,7 @@ from .errors import SemanticError
 class Symbol:
     def __init__(self, name: str, type_: str, scope: str, line: int, value: float = None):
         self.name = name
-        self.type_ = type_  # 'recurso', 'proceso', 'etapa', 'metric'
+        self.type_ = type_  # 'recurso', 'proceso', 'etapa', 'métrica'
         self.scope = scope
         self.line = line
         self.used = False
@@ -20,7 +20,7 @@ class SymbolTable:
         
         self.enter_scope('global')
         for metric in ['pacientes_atendidos', 'espera_promedio', 'ocupacion']:
-            sym = Symbol(metric, 'metric', 'global', 0)
+            sym = Symbol(metric, 'métrica', 'global', 0)
             sym.used = True
             self._table['global'][metric] = sym
 
@@ -53,6 +53,6 @@ class SymbolTable:
         warns = []
         for scope_syms in self._table.values():
             for sym in scope_syms.values():
-                if not sym.used and sym.type_ != 'metric':
+                if not sym.used and sym.type_ != 'métrica':
                     warns.append(f"ADVERTENCIA: '{sym.name}' ({sym.type_}) declarada en línea {sym.line} no se utiliza.")
         return warns

@@ -1,16 +1,12 @@
-G4_FILE=HospSim.g4
-GEN_DIR=gen
+ANTLR = java -jar /usr/local/lib/antlr-4.13.1-complete.jar
 
-all: generate run
+all: generate test
 
 generate:
-	antlr4 -Dlanguage=Python3 -visitor -o $(GEN_DIR) $(G4_FILE)
+	$(ANTLR) -Dlanguage=Python3 -visitor -o gen HospSim.g4
 
-run:
-	python3 main.py tests/entrada_correcta.txt
-
-test_error:
-	python3 main.py tests/entrada_error.txt
+test:
+	./run_tests.sh
 
 clean:
-	rm -rf $(GEN_DIR)/*.py $(GEN_DIR)/*.tokens $(GEN_DIR)/*.interp __pycache__ semantic/__pycache__
+	rm -rf gen/*.py gen/*.tokens gen/*.interp */__pycache__ __pycache__

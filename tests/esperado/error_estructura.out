@@ -1,0 +1,5 @@
+=== ERRORES SEMÁNTICOS ===
+  [Error Semántico, línea 2] El proceso 'vacio' no tiene etapas
+  [Error Semántico, línea 4] Falta la sentencia 'simular durante ...'
+=== ADVERTENCIAS ===
+  ADVERTENCIA: 'vacio' (proceso) declarada en línea 2 no se utiliza.

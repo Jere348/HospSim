@@ -1,0 +1,6 @@
+=== ERRORES SEMÁNTICOS ===
+  [Error Semántico, línea 3] 'm' no es un proceso válido de destino
+  [Error Semántico, línea 4] No se puede medir ocupación sobre 'p' porque no es un recurso
+  [Error Semántico, línea 5] 'fantasma' no es una métrica (use pacientes_atendidos, espera_promedio u ocupacion)
+=== ADVERTENCIAS ===
+  ADVERTENCIA: 'p' (proceso) declarada en línea 2 no se utiliza.

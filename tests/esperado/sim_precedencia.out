@@ -1,0 +1,5 @@
+Análisis semántico: OK
+=== RESULTADOS ===
+  pacientes_atendidos = 3
+  ocupacion(camas) = 12.50 %
+  ocupacion(sillas) = 0.00 %

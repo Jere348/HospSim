@@ -1,19 +1,31 @@
-# HospSim – Hito 1 (Teoría de Compiladores 2026-2)
+# HospSim – Hito 2 (Teoría de Compiladores 2026-2)
 
-DSL para simular la atención en un hospital. ANTLR4 + Python 3.
+DSL para simular la atención en un hospital. Compilador en Python 3 + ANTLR4.
 
 ## Uso
-    make                     # (opcional) regenera gen/ con ANTLR 4.13.1; gen/ ya viene incluido
+    pip install antlr4-python3-runtime==4.13.1
     python3 main.py tests/entrada_completa.txt
-    ./run_tests.sh           # corre todas las entradas de tests/
+    ./run_tests.sh           # ejecuta todas las pruebas y compara con tests/esperado/
+    make generate            # (opcional) regenera gen/; gen/ ya viene incluido
 
-Requiere `pip install antlr4-python3-runtime==4.13.1`.
+## Ejemplo
+    recurso medicos = 1;
+    proceso atencion {
+        etapa consulta usa medicos durante 15 minutos;
+    }
+    generar pacientes cada 5 minutos hacia atencion;
+    simular durante 1 hora;
+    mostrar pacientes_atendidos;      // = 4
+    mostrar espera_promedio;          // = 15.00 minutos
+    mostrar ocupacion(medicos);       // = 100.00 %
 
-## Errores semánticos verificados
-Identificador duplicado en su ámbito · identificador/recurso/proceso no declarado · tipo incorrecto
-(destino no es proceso, ocupación sobre algo que no es recurso) · capacidad, duración, intervalo y
-simulación ≤ 0 (expresiones constantes se evalúan) · división entre cero. Advertencia: símbolos sin usar.
+## Cambios respecto al Hito 1
+- Gramática: corregida la precedencia (`*` y `/` antes que `+` y `-`).
+- Analizador semántico completo: 15 errores (ver `docs/ARQUITECTURA.md`).
+- Errores léxicos y sintácticos con mensajes propios y código de salida 1.
+- Representación intermedia (`backend/modelo.py`) y back end que ejecuta la simulación (`backend/simulador.py`).
+- Pruebas automáticas con salida esperada verificada a mano (`docs/PLAN_VALIDACION.md`).
 
-## Pruebas (`tests/`)
-`entrada_correcta`, `entrada_completa` (válidas) · `error_lexico`, `error_sintactico` · `error_capacidad`,
-`error_duplicado`, `error_tiempos`, `error_expr`, `error_tipos`, `entrada_error` (semánticos).
+## Documentos
+- `docs/ARQUITECTURA.md` – fases, módulos, decisiones y lista de errores semánticos.
+- `docs/PLAN_VALIDACION.md` – método, casos y cálculos a mano de los resultados.

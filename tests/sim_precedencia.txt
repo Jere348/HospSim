@@ -1,0 +1,11 @@
+// camas = 14 (no 20): * tiene mayor precedencia que +
+recurso camas = 2 + 3 * 4;
+recurso sillas = (2 + 3) * 2;
+proceso hospitalizacion {
+    etapa internamiento usa camas durante 1 hora;
+}
+generar pacientes cada 30 minutos hacia hospitalizacion;
+simular durante 2 horas;
+mostrar pacientes_atendidos;
+mostrar ocupacion(camas);
+mostrar ocupacion(sillas);

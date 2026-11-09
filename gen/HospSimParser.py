@@ -18,7 +18,7 @@ def serializedATN():
         1,6,1,6,1,6,1,7,1,7,1,7,1,7,1,7,1,7,1,7,1,7,1,7,3,7,86,8,7,1,8,1,
         8,1,8,1,8,1,8,1,8,1,8,3,8,95,8,8,1,8,1,8,1,8,1,8,1,8,1,8,5,8,103,
         8,8,10,8,12,8,106,9,8,1,9,1,9,1,9,0,1,16,10,0,2,4,6,8,10,12,14,16,
-        18,0,3,1,0,22,23,1,0,24,25,1,0,12,15,110,0,23,1,0,0,0,2,33,1,0,0,
+        18,0,3,1,0,24,25,1,0,22,23,1,0,12,15,110,0,23,1,0,0,0,2,33,1,0,0,
         0,4,35,1,0,0,0,6,41,1,0,0,0,8,52,1,0,0,0,10,61,1,0,0,0,12,70,1,0,
         0,0,14,85,1,0,0,0,16,94,1,0,0,0,18,107,1,0,0,0,20,22,3,2,1,0,21,
         20,1,0,0,0,22,25,1,0,0,0,23,21,1,0,0,0,23,24,1,0,0,0,24,26,1,0,0,
@@ -968,7 +968,7 @@ class HospSimParser ( Parser ):
                     self._errHandler.sync(self)
                     la_ = self._interp.adaptivePredict(self._input,5,self._ctx)
                     if la_ == 1:
-                        localctx = HospSimParser.AddExprContext(self, HospSimParser.ExprContext(self, _parentctx, _parentState))
+                        localctx = HospSimParser.MultExprContext(self, HospSimParser.ExprContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
                         self.state = 96
                         if not self.precpred(self._ctx, 5):
@@ -976,7 +976,7 @@ class HospSimParser ( Parser ):
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 5)")
                         self.state = 97
                         _la = self._input.LA(1)
-                        if not(_la==22 or _la==23):
+                        if not(_la==24 or _la==25):
                             self._errHandler.recoverInline(self)
                         else:
                             self._errHandler.reportMatch(self)
@@ -986,7 +986,7 @@ class HospSimParser ( Parser ):
                         pass
 
                     elif la_ == 2:
-                        localctx = HospSimParser.MultExprContext(self, HospSimParser.ExprContext(self, _parentctx, _parentState))
+                        localctx = HospSimParser.AddExprContext(self, HospSimParser.ExprContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
                         self.state = 99
                         if not self.precpred(self._ctx, 4):
@@ -994,7 +994,7 @@ class HospSimParser ( Parser ):
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 4)")
                         self.state = 100
                         _la = self._input.LA(1)
-                        if not(_la==24 or _la==25):
+                        if not(_la==22 or _la==23):
                             self._errHandler.recoverInline(self)
                         else:
                             self._errHandler.reportMatch(self)

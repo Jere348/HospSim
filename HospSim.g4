@@ -39,9 +39,10 @@ showStmt
     | MOSTRAR ID LPAREN ID RPAREN SEMI
     ;
 
+// En ANTLR la alternativa que aparece primero tiene mayor precedencia: * y / antes que + y -
 expr
-    : expr (PLUS | MINUS) expr     # AddExpr
-    | expr (MULT | DIV) expr       # MultExpr
+    : expr (MULT | DIV) expr       # MultExpr
+    | expr (PLUS | MINUS) expr     # AddExpr
     | NUMBER                       # NumExpr
     | ID                           # IdExpr
     | LPAREN expr RPAREN           # ParenExpr

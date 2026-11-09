@@ -3,17 +3,26 @@ from .errors import SemanticError
 from gen.HospSimParser import HospSimParser
 from gen.HospSimVisitor import HospSimVisitor
 
+METRICAS_CON_ARGUMENTO = {'ocupacion'}  # el resto de métricas no reciben argumento
+
+
 class SemanticVisitor(HospSimVisitor):
     def __init__(self):
         self.symtab = SymbolTable()
         self.errors: list[SemanticError] = []
+        self.simulaciones = 0
 
     def _error(self, msg: str, ctx):
-        e = SemanticError(msg, ctx.start.line)
-        self.errors.append(e)
-        return 'error'
+        self.errors.append(SemanticError(msg, ctx.start.line))
 
-    # Evalúa una expresión; devuelve None si no es constante. Reporta ids no declarados y división entre 0.
+    def _declare(self, name: str, type_: str, ctx):
+        try:
+            return self.symtab.declare(name, type_, ctx.start.line)
+        except SemanticError as e:
+            self.errors.append(e)
+            return None
+
+    # Evalúa una expresión constante; devuelve None si no se puede (ya se reportó el error).
     def _eval(self, e):
         if isinstance(e, HospSimParser.NumExprContext):
             return float(e.NUMBER().getText())
@@ -24,9 +33,12 @@ class SemanticVisitor(HospSimVisitor):
             sym = self.symtab.lookup(name)
             if sym is None:
                 self._error(f"El identificador '{name}' no está declarado", e)
-            else:
-                sym.used = True
-            return None
+                return None
+            if sym.type_ != 'recurso':
+                self._error(f"'{name}' es de tipo '{sym.type_}'; en una expresión solo se pueden usar recursos", e)
+                return None
+            sym.used = True
+            return sym.value
         a, b = self._eval(e.expr(0)), self._eval(e.expr(1))
         op = e.getChild(1).getText()
         if op == '/' and b == 0:
@@ -41,25 +53,31 @@ class SemanticVisitor(HospSimVisitor):
         if val is not None and val <= 0:
             self._error(f"{what} debe ser mayor a 0", ctx)
 
+    # Programa: debe existir exactamente una sentencia 'simular'
+    def visitProgram(self, ctx):
+        self.visitChildren(ctx)
+        if self.simulaciones == 0:
+            self.errors.append(SemanticError("Falta la sentencia 'simular durante ...'", ctx.stop.line))
+
     # Declaración de Recurso: recurso medicos = 1;
     def visitResourceDecl(self, ctx):
         name = ctx.ID().getText()
-        line = ctx.start.line
-        try:
-            self.symtab.declare(name, 'recurso', line)
-        except SemanticError as e:
-            self.errors.append(e)
-
-        self._check_positive(ctx.expr(), f"La capacidad del recurso '{name}'", ctx)
+        val = self._eval(ctx.expr())  # antes de declarar: 'recurso m = m + 1;' es un error
+        if val is not None:
+            if val <= 0:
+                self._error(f"La capacidad del recurso '{name}' debe ser mayor a 0", ctx)
+            elif val != int(val):
+                self._error(f"La capacidad del recurso '{name}' debe ser un número entero (se obtuvo {val:g})", ctx)
+        sym = self._declare(name, 'recurso', ctx)
+        if sym:
+            sym.value = val
 
     # Declaración de Proceso: proceso atencion { ... }
     def visitProcessDecl(self, ctx):
         proc_name = ctx.ID().getText()
-        line = ctx.start.line
-        try:
-            self.symtab.declare(proc_name, 'proceso', line)
-        except SemanticError as e:
-            self.errors.append(e)
+        self._declare(proc_name, 'proceso', ctx)
+        if not ctx.stageStmt():
+            self._error(f"El proceso '{proc_name}' no tiene etapas", ctx)
 
         self.symtab.enter_scope(proc_name)
         for st in ctx.stageStmt():
@@ -70,13 +88,10 @@ class SemanticVisitor(HospSimVisitor):
     def visitStageStmt(self, ctx):
         stage_name = ctx.ID(0).getText()
         resource_name = ctx.ID(1).getText()
-        line = ctx.start.line
 
-        try:
-            self.symtab.declare(stage_name, 'etapa', line).used = True  # una etapa vive dentro de su proceso
-        except SemanticError as e:
-            self.errors.append(e)
-
+        sym = self._declare(stage_name, 'etapa', ctx)
+        if sym:
+            sym.used = True  # una etapa vive dentro de su proceso
         self._check_positive(ctx.expr(), f"La duración de la etapa '{stage_name}'", ctx)
 
         res_sym = self.symtab.lookup(resource_name)
@@ -102,6 +117,9 @@ class SemanticVisitor(HospSimVisitor):
 
     # Simulación: simular durante 8 horas;
     def visitSimulateStmt(self, ctx):
+        self.simulaciones += 1
+        if self.simulaciones > 1:
+            self._error("Solo se permite una sentencia 'simular'", ctx)
         self._check_positive(ctx.expr(), "La duración de la simulación", ctx)
 
     # Sentencia Mostrar: mostrar pacientes_atendidos; ó mostrar ocupacion(medicos);
@@ -109,8 +127,12 @@ class SemanticVisitor(HospSimVisitor):
         func_name = ctx.ID(0).getText()
         sym = self.symtab.lookup(func_name)
 
-        if sym is None:
-            self._error(f"La métrica o entidad '{func_name}' no existe", ctx)
+        if sym is None or sym.type_ != 'métrica':
+            self._error(f"'{func_name}' no es una métrica (use pacientes_atendidos, espera_promedio u ocupacion)", ctx)
+        elif func_name in METRICAS_CON_ARGUMENTO and not ctx.LPAREN():
+            self._error(f"La métrica '{func_name}' requiere un recurso: {func_name}(recurso)", ctx)
+        elif func_name not in METRICAS_CON_ARGUMENTO and ctx.LPAREN():
+            self._error(f"La métrica '{func_name}' no recibe argumentos", ctx)
         elif ctx.LPAREN():
             param_name = ctx.ID(1).getText()
             param_sym = self.symtab.lookup(param_name)

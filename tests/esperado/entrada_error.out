@@ -1,0 +1,7 @@
+=== ERRORES SEMÁNTICOS ===
+  [Error Semántico, línea 4] Recurso 'enfermeros' utilizado en etapa 'consulta' no está declarado
+  [Error Semántico, línea 7] El proceso de destino 'proceso_fantasma' no ha sido declarado
+  [Error Semántico, línea 9] No se puede medir ocupación sobre 'pacientes_atendidos' porque no es un recurso
+=== ADVERTENCIAS ===
+  ADVERTENCIA: 'medicos' (recurso) declarada en línea 1 no se utiliza.
+  ADVERTENCIA: 'atencion' (proceso) declarada en línea 3 no se utiliza.

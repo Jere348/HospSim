@@ -1,0 +1,6 @@
+Análisis semántico: OK
+=== RESULTADOS ===
+  pacientes_atendidos = 35
+  ocupacion(medicos) = 99.48 %
+  ocupacion(camas) = 95.83 %
+  espera_promedio = 105.00 minutos

@@ -1,0 +1,3 @@
+=== ERRORES SEMÁNTICOS ===
+  [Error Semántico, línea 1] División entre cero
+  [Error Semántico, línea 2] El identificador 'x' no está declarado

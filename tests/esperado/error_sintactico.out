@@ -1,0 +1,3 @@
+=== ERRORES LÉXICOS / SINTÁCTICOS ===
+  [Error Sintáctico, línea 2:0] missing ';' at 'proceso'
+  [Error Sintáctico, línea 2:8] missing ID at '{'

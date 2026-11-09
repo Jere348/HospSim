@@ -1,0 +1,3 @@
+=== ERRORES LÉXICOS / SINTÁCTICOS ===
+  [Error Léxico, línea 1:14] token recognition error at: '@'
+  [Error Sintáctico, línea 1:16] extraneous input '2' expecting ';'

@@ -1,0 +1,12 @@
+recurso enfermeros = 1;
+recurso medicos = 1;
+proceso atencion {
+    etapa triaje usa enfermeros durante 5 minutos;
+    etapa consulta usa medicos durante 12 minutos;
+}
+generar pacientes cada 10 minutos hacia atencion;
+simular durante 1 hora;
+mostrar pacientes_atendidos;
+mostrar espera_promedio;
+mostrar ocupacion(enfermeros);
+mostrar ocupacion(medicos);

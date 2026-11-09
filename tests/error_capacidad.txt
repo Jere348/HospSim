@@ -1,3 +1,4 @@
 recurso m = 0;
 proceso p { etapa e usa m durante 5 minutos; }
 generar pacientes cada 1 minutos hacia p;
+simular durante 1 hora;
