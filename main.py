@@ -1,4 +1,7 @@
 import sys
+import argparse
+from pathlib import Path
+from backend.intermedio import emitir
 from antlr4 import CommonTokenStream, FileStream
 from antlr4.error.ErrorListener import ErrorListener
 from gen.HospSimLexer import HospSimLexer
@@ -24,11 +27,17 @@ def mostrar_tokens(lexer) -> None:
 
 
 def main() -> int:
-    solo_tokens = '--tokens' in sys.argv[1:]
-    args = [a for a in sys.argv[1:] if a != '--tokens']
-    if not args:
-        print("Uso: python3 main.py [--tokens] <archivo_de_entrada>")
-        return 2
+    cli = argparse.ArgumentParser(description='Compilador y simulador HospSim')
+    cli.add_argument('archivo', help='Programa fuente .txt')
+    modos = cli.add_mutually_exclusive_group()
+    modos.add_argument('--tokens', action='store_true', help='Mostrar solo tokens')
+    modos.add_argument('--ir', action='store_true', help='Mostrar solo código intermedio')
+    cli.add_argument('--guardar-ir', metavar='ARCHIVO', help='Guardar el código intermedio')
+    opciones = cli.parse_args()
+    solo_tokens = opciones.tokens
+    if solo_tokens and opciones.guardar_ir:
+        cli.error('--tokens no se puede combinar con --guardar-ir')
+    args = [opciones.archivo]
 
     # 1. Análisis léxico y sintáctico
     try:
@@ -69,16 +78,27 @@ def main() -> int:
 
     warns = semantico.symtab.unused_warnings()
     if warns:
-        print('=== ADVERTENCIAS ===')
+        print('=== ADVERTENCIAS ===', file=sys.stderr if opciones.ir else sys.stdout)
         for w in warns:
-            print(' ', w)
+            print(' ', w, file=sys.stderr if opciones.ir else sys.stdout)
 
     if semantico.errors:
         return 1
-    print('Análisis semántico: OK')
+    if not opciones.ir:
+        print('Análisis semántico: OK')
 
     # 3. Representación intermedia y ejecución (back end)
     modelo = ConstructorModelo().construir(tree)
+    intermedio = emitir(modelo)
+    if opciones.guardar_ir:
+        try:
+            Path(opciones.guardar_ir).write_text(intermedio, encoding='utf-8')
+        except OSError as e:
+            print(f'No se pudo guardar el código intermedio: {e}', file=sys.stderr)
+            return 2
+    if opciones.ir:
+        print(intermedio, end='')
+        return 0
     print('=== RESULTADOS ===')
     for linea in reporte(modelo, simular(modelo)):
         print(' ', linea)

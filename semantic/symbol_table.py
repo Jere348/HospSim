@@ -15,31 +15,34 @@ class Symbol:
 
 class SymbolTable:
     def __init__(self):
-        self._table: dict[str, dict[str, Symbol]] = {}
-        self._scope_stack: list[str] = []
+        self._table: dict[int, dict[str, Symbol]] = {}
+        self._scope_names: dict[int, str] = {}
+        self._scope_stack: list[int] = []
         
         self.enter_scope('global')
         for metric in ['pacientes_atendidos', 'espera_promedio', 'ocupacion']:
             sym = Symbol(metric, 'métrica', 'global', 0)
             sym.used = True
-            self._table['global'][metric] = sym
+            self._table[0][metric] = sym
 
     @property
     def current_scope(self) -> str:
-        return self._scope_stack[-1]
+        return self._scope_names[self._scope_stack[-1]]
 
     def enter_scope(self, name: str):
-        self._scope_stack.append(name)
-        self._table.setdefault(name, {})
+        scope_id = len(self._table)
+        self._scope_names[scope_id] = name
+        self._table[scope_id] = {}
+        self._scope_stack.append(scope_id)
 
     def exit_scope(self):
         self._scope_stack.pop()
 
     def declare(self, name: str, type_: str, line: int) -> Symbol:
-        scope = self.current_scope
+        scope = self._scope_stack[-1]
         if name in self._table.setdefault(scope, {}):
-            raise SemanticError(f"El identificador '{name}' ya ha sido declarado en el ámbito '{scope}'.", line)
-        sym = Symbol(name, type_, scope, line)
+            raise SemanticError(f"El identificador '{name}' ya ha sido declarado en el ámbito '{self.current_scope}'.", line)
+        sym = Symbol(name, type_, self.current_scope, line)
         self._table[scope][name] = sym
         return sym
 

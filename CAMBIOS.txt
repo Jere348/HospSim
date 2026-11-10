@@ -1,0 +1,14 @@
+Cambios de esta revisión
+
+- Simulación por eventos con colas FIFO por recurso compartido.
+- Validación de capacidades positivas enteras, incluidos valores casi cero.
+- Ámbitos internos separados de los nombres de los procesos.
+- Código intermedio textual mediante --ir y --guardar-ir.
+- Pruebas portables: 20 casos originales y 11 regresiones.
+- Informe, PDF, presentación y documentación alineados con código intermedio.
+- Datos de los tres integrantes, profesor y sección completos.
+- Índice del informe con páginas y arquitectura actualizada.
+
+Validación: python run_tests.py y python tools/derivaciones.py.
+Las pruebas se ejecutaron en Linux. Se incluyó ejecución portable en Python
+para Windows PowerShell, sin requerir sh ni diff.

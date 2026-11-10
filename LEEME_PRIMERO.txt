@@ -1,0 +1,22 @@
+HOSPSIM - HITO 2
+
+Extrae todo el ZIP y abre la carpeta HospSim en VS Code.
+No reemplaces archivos sueltos de la versión anterior.
+En Terminal > Nueva terminal (PowerShell), ejecuta:
+
+python -m pip install -r requirements.txt
+python main.py ejemplos/atencion.txt
+python main.py --ir ejemplos/atencion.txt
+python run_tests.py
+
+Informe editable y PDF: docs/informe/
+Presentación editable y PDF: docs/presentacion/
+Ejemplo fuente y código intermedio: ejemplos/
+Guía detallada: README.md
+
+El código intermedio se puede guardar con:
+python main.py --ir --guardar-ir salida.ir ejemplos/atencion.txt
+
+La entrega conserva los tres integrantes y la sección 4889.
+Comprueben que el repositorio indicado en el informe corresponde al que usarán
+para entregar y suban allí esta versión. El ZIP no publica cambios en GitHub.

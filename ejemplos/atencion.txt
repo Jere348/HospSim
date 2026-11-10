@@ -1,0 +1,9 @@
+recurso medicos = 1;
+proceso atencion {
+    etapa consulta usa medicos durante 15 minutos;
+}
+generar pacientes cada 5 minutos hacia atencion;
+simular durante 1 hora;
+mostrar pacientes_atendidos;
+mostrar espera_promedio;
+mostrar ocupacion(medicos);

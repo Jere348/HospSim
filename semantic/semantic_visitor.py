@@ -1,3 +1,4 @@
+from math import isfinite
 from .symbol_table import SymbolTable
 from .errors import SemanticError
 from gen.HospSimParser import HospSimParser
@@ -25,7 +26,11 @@ class SemanticVisitor(HospSimVisitor):
     # Evalúa una expresión constante; devuelve None si no se puede (ya se reportó el error).
     def _eval(self, e):
         if isinstance(e, HospSimParser.NumExprContext):
-            return float(e.NUMBER().getText())
+            val = float(e.NUMBER().getText())
+            if not isfinite(val):
+                self._error("El valor numérico debe ser finito", e)
+                return None
+            return val
         if isinstance(e, (HospSimParser.TermExprContext, HospSimParser.FactorExprContext)):
             return self._eval(e.getChild(0))
         if isinstance(e, HospSimParser.ParenExprContext):
@@ -48,7 +53,11 @@ class SemanticVisitor(HospSimVisitor):
             return None
         if a is None or b is None:
             return None
-        return {'+': a + b, '-': a - b, '*': a * b, '/': a / b if b else None}[op]
+        val = a + b if op == '+' else a - b if op == '-' else a * b if op == '*' else a / b
+        if not isfinite(val):
+            self._error("El resultado numérico debe ser finito", e)
+            return None
+        return val
 
     def _check_positive(self, expr, what, ctx):
         val = self._eval(expr)
@@ -68,11 +77,11 @@ class SemanticVisitor(HospSimVisitor):
         if val is not None:
             if val <= 0:
                 self._error(f"La capacidad del recurso '{name}' debe ser mayor a 0", ctx)
-            elif abs(val - round(val)) > 1e-9:
+            elif round(val) < 1 or abs(val - round(val)) > 1e-9:
                 self._error(f"La capacidad del recurso '{name}' debe ser un número entero (se obtuvo {val:g})", ctx)
         sym = self._declare(name, 'recurso', ctx)
         if sym:
-            sym.value = val
+            sym.value = round(val) if val is not None and val > 0 and round(val) >= 1 and abs(val - round(val)) <= 1e-9 else val
 
     # Declaración de Proceso: proceso atencion { ... }
     def visitProcessDecl(self, ctx):

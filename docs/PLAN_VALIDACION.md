@@ -53,3 +53,18 @@ Fines 90, 150, 210 → atendidos **2**, espera **0.00**; médicos 180/2160 = **8
 ## Criterio de aceptación
 Todos los casos en `OK` (`0 prueba(s) fallida(s)`). Todo error nuevo o cambio de gramática se
 acompaña de al menos un caso nuevo.
+
+## Regresiones y ejecución en Windows
+
+Ejecutar `python run_tests.py`. Comprueba salida y código de retorno de los 20 casos originales y ejecuta 11 pruebas adicionales en `tests/test_regresiones.py`.
+
+- Recurso compartido: proceso largo utiliza a durante 100 min y luego b durante 1 min; proceso corto utiliza b durante 1 min. Ambos llegan en t=0. En 10 min: 1 atendido, ocupación de b 10 %.
+- FIFO: largo alcanza b en t=2 y corto lo ocupa de 0 a 5. Largo termina en 6: 2 atendidos, espera promedio 1.5 min y ocupación de b 60 % en 10 min.
+- Reentrada al mismo recurso: dos pacientes y dos etapas de 2 min. Finalizan en 6 y 8: espera promedio 3 min y ocupación 100 %.
+- Finalización exactamente en el horizonte incluida; llegada exactamente en el horizonte excluida.
+- Ausencia de llegadas: métricas cero.
+- Capacidad 0.0000000001 rechazada; 0.1 * 30 aceptada como 3.
+- Nombre de proceso `global` permitido sin mezclar ámbitos.
+- Número fuera del rango finito rechazado sin excepción de Python.
+- Código intermedio idéntico al ejemplo calculado, en pantalla y en archivo.
+- Programa inválido: no se emiten instrucciones intermedias.

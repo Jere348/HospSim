@@ -1,0 +1,16 @@
+; HospSim IR 1 - tiempos en minutos
+RESOURCE medicos 1
+QUEUE medicos FIFO
+PROCESS atencion atencion_inicio
+ARRIVALS atencion EVERY 5 FROM 0
+RUN_UNTIL 60
+REPORT pacientes_atendidos
+REPORT espera_promedio
+REPORT ocupacion medicos
+HALT
+atencion_inicio:
+  ; etapa consulta
+  ACQUIRE medicos
+  DELAY 15
+  RELEASE medicos
+  COMPLETE

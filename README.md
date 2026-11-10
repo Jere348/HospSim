@@ -47,9 +47,35 @@ make generate                                        # (opcional) regenera gen/ 
 - Plan de validación: [`docs/PLAN_VALIDACION.md`](docs/PLAN_VALIDACION.md)
 - Guion del video: [`docs/GUION_VIDEO.md`](docs/GUION_VIDEO.md)
 
-## Historial
+## Alcance del avance
 
-- **Hito 1** (tag `hito-1`): analizadores léxico, sintáctico y semántico inicial.
-- **Hito 2** (tag `hito-2`): gramática estratificada E/T/F (corrige la precedencia del Hito 1),
-  analizador semántico completo, representación intermedia, simulador, pruebas y documentación.
-- **Hito 3**: generación de código LLVM con llvmlite, validada contra el simulador.
+Incluye análisis léxico, sintáctico y semántico, representación intermedia, emisión textual y simulador por eventos discretos. El alcance aprobado no requiere LLVM. El archivo `.ir` describe el modelo; la ejecución utiliza el mismo `Modelo` interno, no un lector del archivo `.ir`.
+
+## Equipo
+
+- Alvaro Jerry Rivera Calderón (u20231h075)
+- Ericks Santiago Alarcon Castellanos (U202322704)
+- Rodrigo Aaron Colonio Soto (u202323598)
+
+Ciencias de la Computación · Sección 4889
+Profesor: JOSE LUIS SONCCO ALVAREZ
+
+## Inicio en Windows PowerShell
+
+1. Extraer el ZIP completo.
+2. Abrir la carpeta `HospSim` en VS Code y abrir una terminal PowerShell.
+3. Ejecutar:
+
+```powershell
+python -m pip install -r requirements.txt
+python main.py ejemplos/atencion.txt
+python main.py --ir ejemplos/atencion.txt
+python main.py --ir --guardar-ir salida.ir ejemplos/atencion.txt
+python run_tests.py
+```
+
+El primer ejemplo produce 4 pacientes atendidos, espera promedio 15.00 minutos y ocupación 100.00 %. El último comando comprueba 20 casos originales y 11 regresiones. Se requiere Python 3.10 o posterior. No hace falta VirtualBox ni Java para ejecutar; `gen/` ya contiene los archivos ANTLR generados.
+
+## Reglas de simulación
+
+Cada recurso mantiene una cola FIFO común a los procesos que lo usan. Se procesan eventos cronológicamente. A igual tiempo, las finalizaciones preceden a las llegadas; después desempata el orden de inserción. Los que ya esperan conservan prioridad. Se generan llegadas antes del horizonte, y se incluyen finalizaciones exactamente en él. La espera promedio considera solo pacientes que terminan; la ocupación incluye trabajo parcial dentro del horizonte.

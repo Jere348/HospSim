@@ -48,7 +48,7 @@ pacientes_atendidos / espera_promedio / ocupacion(recurso)
 
 ## Decisiones de diseño
 - **Dos recorridos separados** (semántico y construcción del modelo): el back end nunca ve un árbol inválido, así no repite validaciones.
-- **Representación intermedia propia**: desacopla el back end de ANTLR. En el Hito 3 se puede generar LLVM IR desde el mismo `Modelo` sin tocar el front end; el simulador en Python queda como oráculo para validar el código generado.
+- **Representación intermedia propia**: desacopla el back end de ANTLR. El emisor `backend/intermedio.py` produce código intermedio textual mediante `--ir` y `--guardar-ir`. El simulador ejecuta el mismo `Modelo`; no interpreta el archivo `.ir`. LLVM no forma parte del alcance aprobado.
 - **Simulación determinista** (sin aleatoriedad): las salidas son reproducibles y se pueden verificar a mano, requisito del plan de validación.
 
 ## Errores semánticos verificados (21)
@@ -75,3 +75,9 @@ pacientes_atendidos / espera_promedio / ocupacion(recurso)
 21. ocupacion sobre un recurso inexistente — `mostrar ocupacion(rayos_x);`
 
 Advertencia: recurso o proceso declarado y nunca usado.
+
+## Ejecución y colas
+
+Se usa una cola de prioridad de eventos y una cola FIFO por recurso, compartida por todos los procesos. Las finalizaciones tienen prioridad sobre las llegadas simultáneas; el orden de inserción desempata. Llegadas en [0, T), finalizaciones en [0, T]. La espera promedio corresponde a pacientes terminados y la ocupación incluye servicios parciales.
+
+Los ámbitos tienen identificadores internos independientes de sus nombres, por lo que un proceso puede llamarse `global`. Las capacidades deben redondear a un entero >= 1 y diferir de él como máximo en 1e-9; se rechazan números no finitos.
