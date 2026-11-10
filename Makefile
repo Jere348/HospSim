@@ -6,7 +6,7 @@ generate:
 	$(ANTLR) -Dlanguage=Python3 -visitor -o gen HospSim.g4
 
 test:
-	./run_tests.sh
+	python3 run_tests.py
 
 clean:
 	rm -rf gen/*.py gen/*.tokens gen/*.interp */__pycache__ __pycache__

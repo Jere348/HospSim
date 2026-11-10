@@ -8,9 +8,10 @@ línea correctos, y que el back end produce métricas correctas.
 Pruebas de caja negra con salida esperada (*golden files*):
 
 - Cada caso es un programa `tests/<caso>.txt` con su salida esperada `tests/esperado/<caso>.out`.
-- `./run_tests.sh` ejecuta `main.py` sobre cada caso y compara con `diff`; termina con código ≠ 0 si algo falla.
-- `./run_tests.sh -u` regenera las salidas esperadas; **toda salida nueva se revisa a mano antes de
-  confirmarla** (si no, la prueba solo repetiría lo que el compilador ya hace).
+- `python run_tests.py` ejecuta `main.py` sobre cada caso, compara salida y código de retorno, y corre las
+  regresiones de `tests/test_regresiones.py`; termina con código ≠ 0 si algo falla.
+- Toda salida esperada nueva se revisa a mano antes de
+  confirmarla (si no, la prueba solo repetiría lo que el compilador ya hace).
 
 ## Casos
 

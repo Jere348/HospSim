@@ -22,7 +22,7 @@ pip install antlr4-python3-runtime==4.13.1
 python3 main.py tests/entrada_completa.txt          # compila y ejecuta
 python3 main.py --tokens tests/entrada_correcta.txt # solo análisis léxico
 python3 tools/derivaciones.py                        # derivaciones más a la izquierda
-./run_tests.sh                                       # pruebas automáticas
+python3 run_tests.py                                 # pruebas automáticas
 make generate                                        # (opcional) regenera gen/ con ANTLR 4.13.1
 ```
 
@@ -33,19 +33,11 @@ make generate                                        # (opcional) regenera gen/ 
 | `HospSim.g4` | Gramática léxica y sintáctica (ANTLR4). |
 | `gen/` | Código generado por ANTLR (incluido para no requerir Java). |
 | `main.py` | Driver: léxico → sintáctico → semántico → representación intermedia → simulación. |
-| `semantic/` | Tabla de símbolos por ámbitos y analizador semántico (21 verificaciones). |
+| `semantic/` | Tabla de símbolos por ámbitos y analizador semántico (22 verificaciones). |
 | `backend/` | Representación intermedia (`modelo.py`) y back end de simulación (`simulador.py`). |
 | `tools/derivaciones.py` | Derivaciones más a la izquierda en la notación del curso, generadas desde el parser. |
 | `tests/` | Programas de prueba y salidas esperadas (`tests/esperado/`). |
 | `docs/` | Informe, presentación, arquitectura, plan de validación y guion del video. |
-
-## Entregables del Hito 2
-
-- Informe: [`docs/informe/Informe_Hito2_HospSim.pdf`](docs/informe/Informe_Hito2_HospSim.pdf) (editable en `.docx`)
-- Presentación: [`docs/presentacion/Presentacion_Hito2_HospSim.pdf`](docs/presentacion/Presentacion_Hito2_HospSim.pdf) (editable en `.pptx`)
-- Arquitectura: [`docs/ARQUITECTURA.md`](docs/ARQUITECTURA.md)
-- Plan de validación: [`docs/PLAN_VALIDACION.md`](docs/PLAN_VALIDACION.md)
-- Guion del video: [`docs/GUION_VIDEO.md`](docs/GUION_VIDEO.md)
 
 ## Alcance del avance
 
@@ -53,9 +45,9 @@ Incluye análisis léxico, sintáctico y semántico, representación intermedia,
 
 ## Equipo
 
-- Alvaro Jerry Rivera Calderón (u20231h075)
-- Ericks Santiago Alarcon Castellanos (U202322704)
-- Rodrigo Aaron Colonio Soto (u202323598)
+- Alvaro Jerry Rivera Calderón
+- Ericks Santiago Alarcon Castellanos
+- Rodrigo Aaron Colonio Soto
 
 Ciencias de la Computación · Sección 4889
 Profesor: JOSE LUIS SONCCO ALVAREZ

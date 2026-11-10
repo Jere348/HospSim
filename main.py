@@ -21,7 +21,6 @@ class ColectorErrores(ErrorListener):
 
 
 def mostrar_tokens(lexer) -> None:
-    """Modo --tokens: imprime la secuencia de tokens que produce el analizador léxico."""
     for tok in lexer.getAllTokens():
         print(f"{tok.line}:{tok.column:<4} {HospSimLexer.symbolicNames[tok.type]:<10} '{tok.text}'")
 
